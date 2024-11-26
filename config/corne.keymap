@@ -23,18 +23,18 @@
         };
 
         rparenthesis {
-            bindings = <&kp LEFT_PARENTHESIS>;
+            bindings = <&kp RIGHT_PARENTHESIS>;
             key-positions = <20 21>;
         };
 
         QM {
             bindings = <&kp SINGLE_QUOTE>;
-            key-positions = <31 32>;
+            key-positions = <7 8>;
         };
 
         DQM {
             bindings = <&kp DOUBLE_QUOTES>;
-            key-positions = <32 33>;
+            key-positions = <8 9>;
         };
 
         eq {
@@ -45,6 +45,11 @@
         BS {
             bindings = <&kp BACKSPACE>;
             key-positions = <10 9>;
+        };
+
+        tab {
+            bindings = <&kp TAB>;
+            key-positions = <1 2>;
         };
     };
 
@@ -75,34 +80,34 @@
 &none  &kp Q                            &kp W                          &kp E                              &kp R                            &kp T           &kp Y        &kp U                             &kp I                               &kp O                           &kp P                                 &none
 &none  &hold_tap_behavior LCTRL A       &hold_tap_behavior LEFT_ALT S  &hold_tap_behavior LEFT_COMMAND D  &hold_tap_behavior LEFT_SHIFT F  &lt 6 G         &lt 6 H      &hold_tap_behavior RIGHT_SHIFT J  &hold_tap_behavior RIGHT_COMMAND K  &hold_tap_behavior RIGHT_ALT L  &hold_tap_behavior RCTRL SEMICOLON    &none
 &none  &hold_tap_behavior LEFT_SHIFT Z  &kp X                          &kp C                              &kp V                            &kp B           &kp N        &kp M                             &kp COMMA                           &kp DOT                         &hold_tap_behavior RIGHT_SHIFT SLASH  &none
-                                                                       &kp ESCAPE                         &lt 2 TAB                        &lt 1 RETURN    &lt 4 SPACE  &lt 3 BACKSPACE                   &lt 5 DELETE
+                                                                       &kp GRAVE                          &lt 3 TAB                        &lt 5 RETURN    &lt 4 SPACE  &lt 1 BACKSPACE                   &lt 2 DELETE
             >;
         };
 
         number_layer {
             bindings = <
-&none  &none      &none         &none             &none           &none    &none      &kp N7  &kp N8   &kp N9  &kp DOUBLE_QUOTES  &none
-&none  &kp LCTRL  &kp LEFT_ALT  &kp LEFT_COMMAND  &kp LEFT_SHIFT  &none    &kp EQUAL  &kp N4  &kp N5   &kp N6  &kp SQT            &none
-&none  &none      &none         &none             &none           &none    &kp PLUS   &kp N1  &kp N2   &kp N3  &kp GRAVE          &none
-                                &none             &none           &none    &kp MINUS  &kp N0  &kp DOT
+&none  &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3      &kp NUMBER_4    &kp N5    &kp NUMBER_6  &kp N7     &kp N8     &kp N9      &kp NUMBER_0    &none
+&none  &kp LCTRL       &kp LEFT_ALT  &kp LEFT_COMMAND  &kp LEFT_SHIFT  &none     &none         &kp EQUAL  &kp PLUS   &kp MINUS   &kp UNDERSCORE  &none
+&none  &kp LEFT_SHIFT  &none         &none             &none           &none     &none         &none      &kp COMMA  &kp PERIOD  &kp SLASH       &none
+                                     &none             &none           &none     &none         &none      &none
             >;
         };
 
         symbol_layer {
             bindings = <
-&none  &none      &none     &none     &none      &none    &kp LEFT_PARENTHESIS  &kp AMPERSAND    &kp ASTERISK          &kp TILDE  &kp RIGHT_PARENTHESIS  &none
-&none  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none    &kp LEFT_BRACE        &kp DOLLAR       &kp PERCENT           &kp CARET  &kp RIGHT_BRACE        &none
-&none  &none      &none     &none     &none      &none    &kp LEFT_BRACKET      &kp EXCLAMATION  &kp AT_SIGN           &kp HASH   &kp RIGHT_BRACKET      &none
-                            &none     &none      &none    &kp UNDERSCORE        &kp PIPE         &kp NON_US_BACKSLASH
+&none  &kp EXCLAMATION  &kp AT_SIGN      &kp HASH          &kp DOLLAR         &kp PERCENT    &kp CARET  &kp AMPERSAND  &kp ASTERISK      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &none
+&none  &kp LCTRL        &kp LALT         &kp LGUI          &kp LSHFT          &none          &none      &kp PIPE       &kp BACKSLASH     &none                 &none                  &none
+&none  &kp LEFT_BRACE   &kp RIGHT_BRACE  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &none          &none      &kp LESS_THAN  &kp GREATER_THAN  &none                 &none                  &none
+                                         &none             &none              &none          &none      &none          &none
             >;
         };
 
         navigation_layer {
             bindings = <
-&none  &kp HOME  &kp UP_ARROW  &kp END    &kp PAGE_UP    &none    &none   &none            &none              &none          &none      &none
-&none  &kp LEFT  &kp DOWN      &kp RIGHT  &kp PAGE_DOWN  &none    &none   &kp RIGHT_SHIFT  &kp RIGHT_COMMAND  &kp RIGHT_ALT  &kp RCTRL  &none
-&none  &none     &none         &none      &none          &none    &none   &none            &none              &none          &none      &none
-                               &none      &none          &none    &trans  &none            &none
+&none  &none           &none         &none             &none           &none    &none     &none          &none         &none      &none  &none
+&none  &kp LCTRL       &kp LEFT_ALT  &kp LEFT_COMMAND  &kp LEFT_SHIFT  &none    &kp LEFT  &kp DOWN       &kp UP_ARROW  &kp RIGHT  &none  &none
+&none  &kp LEFT_SHIFT  &none         &none             &none           &none    &kp HOME  &kp PAGE_DOWN  &kp PAGE_UP   &kp END    &none  &none
+                                     &none             &none           &none    &trans    &none          &none
             >;
         };
 
@@ -117,10 +122,10 @@
 
         system_layer {
             bindings = <
-&none  &none  &none             &none                   &none               &none           &none  &none            &none              &none          &none      &none
-&none  &none  &kp K_MUTE        &kp C_VOLUME_DOWN       &kp C_VOLUME_UP     &none           &none  &kp RIGHT_SHIFT  &kp RIGHT_COMMAND  &kp RIGHT_ALT  &kp RCTRL  &none
-&none  &none  &kp C_PLAY_PAUSE  &kp C_AL_PREVIOUS_TASK  &kp C_AL_NEXT_TASK  &none           &none  &none            &none              &none          &none      &none
-                                &bt BT_SEL 0            &bt BT_SEL 1        &bt BT_SEL 2    &none  &none            &trans
+&none  &none  &bt BT_SEL 0      &bt BT_SEL 1            &bt BT_SEL 2        &none    &none  &none            &none              &none          &none      &none
+&none  &none  &kp K_MUTE        &kp C_VOLUME_DOWN       &kp C_VOLUME_UP     &none    &none  &kp RIGHT_SHIFT  &kp RIGHT_COMMAND  &kp RIGHT_ALT  &kp RCTRL  &none
+&none  &none  &kp C_PLAY_PAUSE  &kp C_AL_PREVIOUS_TASK  &kp C_AL_NEXT_TASK  &none    &none  &none            &none              &none          &none      &none
+                                &none                   &none               &none    &none  &none            &trans
             >;
         };
 
