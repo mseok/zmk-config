@@ -27,29 +27,14 @@
             key-positions = <20 21>;
         };
 
-        QM {
-            bindings = <&kp SINGLE_QUOTE>;
-            key-positions = <7 8>;
-        };
-
-        DQM {
-            bindings = <&kp DOUBLE_QUOTES>;
-            key-positions = <8 9>;
-        };
-
-        eq {
-            bindings = <&kp EQUAL>;
-            key-positions = <3 1>;
-        };
-
-        BS {
-            bindings = <&kp BACKSPACE>;
-            key-positions = <10 9>;
-        };
-
         tab {
             bindings = <&kp TAB>;
             key-positions = <1 2>;
+        };
+
+        semicolon {
+            bindings = <&kp SEMICOLON>;
+            key-positions = <21 22>;
         };
     };
 
