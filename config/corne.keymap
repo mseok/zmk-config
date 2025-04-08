@@ -92,6 +92,30 @@
             hold-trigger-on-release;
             hold-trigger-key-positions = <37 40>;
         };
+
+        lang_switcher: lang_switcher {
+            compatible = "zmk,behavior-tap-dance";
+            label = "LANG_SWITCHER";
+            #binding-cells = <0>;
+            bindings = <&kp LCTRL>, <&kp SPACE>;
+        };
+    };
+
+    macros {
+        Raycast: Raycast {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_COMMAND &kp SPACE>, <&macro_tap>;
+
+            label = "RAYCAST";
+        };
+
+        change_lc: change_lc {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LCTRL &kp SPACE>;
+            label = "CHANGE_LC";
+        };
     };
 
     keymap {
