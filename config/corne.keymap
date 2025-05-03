@@ -138,10 +138,10 @@
 
         number_layer {
             bindings = <
-&none  &kp GRAVE       &none         &kp LEFT_BRACE    &kp RIGHT_BRACE    &kp PIPE         &none         &kp EQUAL  &kp PLUS        &kp COLON   &kp SEMICOLON    &none
-&none  &kp NUMBER_1    &kp NUMBER_2  &kp NUMBER_3      &kp NUMBER_4       &kp N5           &kp NUMBER_6  &kp N7     &kp N8          &kp N9      &kp N0           &none
-&none  &kp LEFT_SHIFT  &none         &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp BACKSLASH    &none         &kp MINUS  &kp UNDERSCORE  &kp PERIOD  &kp RIGHT_SHIFT  &none
-                                     &none             &none              &none            &none         &none      &none
+&none  &kp GRAVE                          &none                                 &kp LEFT_BRACE                        &kp RIGHT_BRACE                         &kp PIPE         &none         &kp EQUAL                          &kp PLUS                         &kp COLON                        &kp SEMICOLON                &none
+&none  &hold_tap_behavior LCTRL NUMBER_1  &hold_tap_behavior LEFT_ALT NUMBER_2  &hold_tap_behavior LEFT_GUI NUMBER_3  &hold_tap_behavior LEFT_SHIFT NUMBER_4  &kp N5           &kp NUMBER_6  &hold_tap_behavior RIGHT_SHIFT N7  &hold_tap_behavior RIGHT_GUI N8  &hold_tap_behavior RIGHT_ALT N9  &hold_tap_behavior RCTRL N0  &none
+&none  &kp LEFT_SHIFT                     &none                                 &kp LEFT_BRACKET                      &kp RIGHT_BRACKET                       &kp BACKSLASH    &none         &kp MINUS                          &kp UNDERSCORE                   &kp PERIOD                       &kp RIGHT_SHIFT              &none
+                                                                                &none                                 &none                                   &none            &none         &none                              &none
             >;
         };
 
