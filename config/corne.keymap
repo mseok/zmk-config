@@ -29,7 +29,7 @@
 
         tab {
             bindings = <&kp TAB>;
-            key-positions = <4 3>;
+            key-positions = <5 17>;
         };
 
         semicolon {
