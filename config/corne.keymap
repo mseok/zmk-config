@@ -6,6 +6,10 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
+
+/* Mouse scroll speed. ZMK default SCRL_VAL is 10 (느림); raise before include.
+   acceleration-exponent=0 이라 속도는 이 값으로 고정된다. 더 빠르게: 값을 키움. */
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 30
 #include <dt-bindings/zmk/pointing.h>
 
 #define BASE  0
@@ -41,7 +45,7 @@
             #binding-cells = <2>;
             bindings = <&kp>, <&kp>;
             tapping-term-ms = <200>;
-            quick-tap-ms = <175>;
+            quick-tap-ms = <200>;
             require-prior-idle-ms = <150>;
             flavor = "tap-preferred";
         };
@@ -100,4 +104,11 @@
             >;
         };
     };
+};
+
+/* Enable quick-tap (탭 후 바로 꾹 → 반복) on every layer-tap, matching QMK's
+   default quick tap. Lets Backspace / Space / Enter / Esc auto-repeat.
+   stock &lt 에는 quick-tap-ms 가 없어 기본 0(비활성)이었다. */
+&lt {
+    quick-tap-ms = <200>;
 };
