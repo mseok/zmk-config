@@ -98,9 +98,10 @@
         };
 
         // NAVIGATION / MEDIA — 좌 Esc 엄지 hold (볼륨조절 레이어)
+        // 부트로더 진입: NAV + 좌측 상단끝(왼쪽 half) · NAV + 우측 상단끝(오른쪽 half)
         navigation_layer {
             bindings = <
-&none  &none         &none            &none        &none        &none                  &none           &none         &none           &none        &none           &none
+&none  &bootloader   &none            &none        &none        &none                  &none           &none         &none           &bootloader  &none           &none
 &none  &none         &kp K_MUTE       &kp C_VOL_DN &kp C_VOL_UP &kp C_BRI_UP           &kp LEFT        &kp DOWN      &kp UP          &kp RIGHT    &none           &none
 &none  &kp LSHFT     &kp C_PREV       &kp C_PP     &kp C_NEXT   &kp C_BRI_DN           &kp HOME        &kp PG_DN     &kp PG_UP       &kp END      &kp RSHFT       &none
                                       &none       &none        &none                  &none           &none         &none
