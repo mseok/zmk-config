@@ -9,9 +9,9 @@
 
 /* Mouse move speed. ZMK default MOVE_VAL is 600 — 6배로. */
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 3600
-/* Mouse scroll speed. ZMK default 10. acceleration-exponent=0 이라 누르는 동안
-   이 값으로 '일정 속도' 스크롤 → 2배로. */
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 20
+/* Mouse scroll speed. ZMK default 10. &msc 는 기본 acceleration-exponent=0 라
+   가속 없이 누르는 동안 '일정 속도' 스크롤. 20 → 16 (0.8배). */
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 16
 #include <dt-bindings/zmk/pointing.h>
 
 #define BASE  0
@@ -137,9 +137,9 @@
     quick-tap-ms = <200>;
 };
 
-/* Mouse move: 기본 time-to-max-speed-ms=300 → 150 으로 풀스피드 도달을 2배
-   빠르게. acceleration-exponent=1(선형 가속)은 유지 — 짧게 누를 땐 미세 이동,
-   계속 누르면 0.15s 안에 MOVE_VAL(3600) 최고속. */
+/* Mouse move: acceleration-exponent=0 으로 가속 제거 → 누르는 즉시 MOVE_VAL
+   (3600) 최고속 일정 이동 (스크롤과 동일 방식). exponent=0 이면 ZMK speed()
+   가 곧장 max 를 반환하므로 time-to-max-speed-ms 는 무시된다. */
 &mmv {
-    time-to-max-speed-ms = <150>;
+    acceleration-exponent = <0>;
 };
