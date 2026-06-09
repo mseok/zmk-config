@@ -7,9 +7,11 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
-/* Mouse scroll speed. ZMK default SCRL_VAL is 10 (느림); raise before include.
-   acceleration-exponent=0 이라 속도는 이 값으로 고정된다. 더 빠르게: 값을 키움. */
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 100
+/* Mouse move speed. ZMK default MOVE_VAL is 600 — 너무 느려서 2배로. */
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 1200
+/* Mouse scroll speed. ZMK default 10. acceleration-exponent=0 이라 누르는 동안
+   이 값으로 '일정 속도' 스크롤 → 100은 hold 시 과해서 50으로 낮춤. */
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 50
 #include <dt-bindings/zmk/pointing.h>
 
 #define BASE  0
