@@ -9,8 +9,8 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 
-/* Mouse move speed. ZMK default MOVE_VAL is 600 — 6배로. */
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 3600
+/* Mouse move MAX speed (가속 곡선의 끝점). ZMK default 600 → 10배. 곡선은 아래 &mmv. */
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 6000
 /* Mouse scroll speed. ZMK default 10. &msc 는 기본 acceleration-exponent=0 라
    가속 없이 누르는 동안 '일정 속도' 스크롤. 20 → 16 (0.8배). */
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 16
@@ -140,9 +140,10 @@
     quick-tap-ms = <200>;
 };
 
-/* Mouse move: acceleration-exponent=0 으로 가속 제거 → 누르는 즉시 MOVE_VAL
-   (3600) 최고속 일정 이동 (스크롤과 동일 방식). exponent=0 이면 ZMK speed()
-   가 곧장 max 를 반환하므로 time-to-max-speed-ms 는 무시된다. */
+/* Mouse move: 가속 곡선. 누르면 0에서 출발해 time-to-max-speed-ms(300ms) 동안
+   MOVE_VAL(6000)까지 선형(exponent=1) 가속 → 짧게 톡 = 느리고 정밀, 꾹 = 빠름.
+   (등속이던 이전 설정을 macOS 포인터 가속이 깎던 문제를 곡선으로 회피.) 값은 취향껏. */
 &mmv {
-    acceleration-exponent = <0>;
+    acceleration-exponent = <1>;
+    time-to-max-speed-ms = <300>;
 };
