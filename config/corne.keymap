@@ -6,6 +6,8 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
 
 /* Mouse move speed. ZMK default MOVE_VAL is 600 — 6배로. */
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 3600
@@ -98,10 +100,11 @@
         };
 
         // NAVIGATION / MEDIA — 좌 Esc 엄지 hold (볼륨조절 레이어)
-        // 부트로더 진입: NAV + 좌측 상단끝(왼쪽 half) · NAV + 우측 상단끝(오른쪽 half)
+        // 윗줄 = 부트로더(양쪽 상단 바깥끝/새끼 자리, NAV+해당 모서리) +
+        //        블루투스: 왼손 W/E/R/T = BT_SEL 0~3, 그옆 BT_CLR, OUT_TOG(USB↔BLE 토글)
         navigation_layer {
             bindings = <
-&none  &bootloader   &none            &none        &none        &none                  &none           &none         &none           &bootloader  &none           &none
+&none  &bootloader   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3    &bt BT_CLR  &out OUT_TOG  &none  &none  &bootloader  &none
 &none  &none         &kp K_MUTE       &kp C_VOL_DN &kp C_VOL_UP &kp C_BRI_UP           &kp LEFT        &kp DOWN      &kp UP          &kp RIGHT    &none           &none
 &none  &kp LSHFT     &kp C_PREV       &kp C_PP     &kp C_NEXT   &kp C_BRI_DN           &kp HOME        &kp PG_DN     &kp PG_UP       &kp END      &kp RSHFT       &none
                                       &none       &none        &none                  &none           &none         &none
