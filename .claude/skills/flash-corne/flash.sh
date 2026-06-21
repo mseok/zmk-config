@@ -42,11 +42,17 @@ cmd_download() {
   info "아티팩트 다운로드 중 (run $rid)..."
   gh -R "$REPO" run download "$rid" -D "$tmp" >/dev/null
   mkdir -p "$CACHE"
+  # Artifact .uf2 names carry the full shield list (e.g.
+  # "corne_left nice_view_adapter nice_view_gem-nice_nano__zmk-zmk.uf2"),
+  # so match a prefix glob — NOT 'corne_left-*' (the char after corne_left is a space).
   local l r
-  l="$(find "$tmp" -name 'corne_left-*.uf2'  | head -1)"
-  r="$(find "$tmp" -name 'corne_right-*.uf2' | head -1)"
-  [ -n "$l" ] && cp "$l" "$CACHE/corne_left.uf2"
-  [ -n "$r" ] && cp "$r" "$CACHE/corne_right.uf2"
+  l="$(find "$tmp" -name 'corne_left*.uf2'  | head -1)"
+  r="$(find "$tmp" -name 'corne_right*.uf2' | head -1)"
+  # Fail loudly instead of silently keeping a stale cached .uf2.
+  [ -n "$l" ] || { err "corne_left*.uf2 아티팩트를 못 찾음 (빌드 산출물 파일명 규칙 변경?). 캐시를 갱신하지 않았습니다."; exit 1; }
+  [ -n "$r" ] || { err "corne_right*.uf2 아티팩트를 못 찾음 (빌드 산출물 파일명 규칙 변경?). 캐시를 갱신하지 않았습니다."; exit 1; }
+  cp "$l" "$CACHE/corne_left.uf2"
+  cp "$r" "$CACHE/corne_right.uf2"
   echo "$rid" > "$CACHE/run_id"
   rm -rf "$tmp"
   ok "펌웨어 준비 완료 → $CACHE"
