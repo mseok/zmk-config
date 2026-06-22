@@ -85,7 +85,10 @@ cmd_flash() {
   [ -f "$uf2" ] || { err "$uf2 없음 — 먼저 'flash.sh download' 를 실행하세요."; exit 1; }
   wait_for_nicenano || exit 1
   info "$half half 플래시 중..."
-  cp "$uf2" "$VOL/" 2>/dev/null || true   # macOS xattr 오류는 정상(데이터는 정상 기록됨)
+  # -X: macOS 가 NICENANO(FAT) 볼륨에 xattr 을 복사하려다 'Device not configured'
+  # 로 실패하면 페이로드 전송까지 중단돼 조용히 실패한다(.uf2 가 안 떨어지고 보드도
+  # 재부팅 안 함). -X 로 xattr 을 건너뛰면 해결. 진짜 복사 실패는 set -e 가 잡는다.
+  cp -X "$uf2" "$VOL/"
   if wait_for_unmount; then
     ok "✅ $half half 플래시 완료 — 보드 재부팅 중."
   else
