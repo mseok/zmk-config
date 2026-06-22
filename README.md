@@ -1,9 +1,9 @@
 # zmk-config
 
-[ZMK](https://zmk.dev) firmware for a **Corne** (split 42-key) keyboard on **nice!nano v2**.
+[ZMK](https://zmk.dev) firmware for a **Corne** (split 36-key) keyboard on **nice!nano v2**.
 
 - Keymap: [`config/corne.keymap`](config/corne.keymap) · build options: [`config/corne.conf`](config/corne.conf)
-- QWERTY with GACS home-row mods, plus number/symbol, navigation/media (+ Bluetooth), mouse, and a one-handed shift layer.
+- QWERTY with CAGS home-row mods, plus number/symbol, navigation/media (+ Bluetooth), mouse, and a one-handed shift layer.
 - Flash with the bundled [`flash-corne`](.claude/skills/flash-corne) helper. The diagrams below are generated from the keymap itself by [`keymap-viz`](.claude/skills/keymap-viz).
 
 ## Keymap
@@ -13,7 +13,7 @@ Hold the thumb key marked **held** to reach each layer (tap it for the letter pr
 ### Base — QWERTY + home-row mods
 <img src="keymap/base.svg" alt="Corne BASE layer" width="100%">
 
-Home row doubles as modifiers when held: `A`/`;`=Ctrl, `S`/`L`=Alt, `D`/`K`=Cmd, `F`/`J`=Shift (positional, so rolls stay taps). The six thumbs are layer-taps.
+Home row doubles as modifiers when held: `A`/`'`=Ctrl, `S`/`L`=Alt, `D`/`K`=Cmd, `F`/`J`=Shift (positional, so rolls stay taps). The six thumbs are layer-taps.
 
 ### Number / symbol — hold right `Bspc`
 <img src="keymap/num.svg" alt="Corne NUM layer" width="100%">
