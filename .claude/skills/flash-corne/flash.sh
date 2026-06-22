@@ -85,10 +85,13 @@ cmd_flash() {
   [ -f "$uf2" ] || { err "$uf2 없음 — 먼저 'flash.sh download' 를 실행하세요."; exit 1; }
   wait_for_nicenano || exit 1
   info "$half half 플래시 중..."
-  # -X: macOS 가 NICENANO(FAT) 볼륨에 xattr 을 복사하려다 'Device not configured'
-  # 로 실패하면 페이로드 전송까지 중단돼 조용히 실패한다(.uf2 가 안 떨어지고 보드도
-  # 재부팅 안 함). -X 로 xattr 을 건너뛰면 해결. 진짜 복사 실패는 set -e 가 잡는다.
-  cp -X "$uf2" "$VOL/"
+  # -X 로 xattr 복사를 건너뛴다(안 그러면 macOS 가 FAT NICENANO 볼륨에 xattr 을
+  # 쓰려다 'Device not configured' 로 실패하면서 페이로드 전송까지 막는다). 또한
+  # 대상 파일명을 짧은 8.3(FW.UF2)으로 고정한다: 최신 macOS 의 fskit FAT 드라이버가
+  # 일부 구형 부트로더 볼륨에서 긴 파일명(corne_left.uf2) 생성을 'Permission denied'
+  # 로 거부하는 사례가 있어서다. UF2 부트로더는 파일명과 무관하게 .uf2 를 받는다.
+  # 진짜 복사 실패는 set -e 가 잡는다.
+  cp -X "$uf2" "$VOL/FW.UF2"
   if wait_for_unmount; then
     ok "✅ $half half 플래시 완료 — 보드 재부팅 중."
   else
