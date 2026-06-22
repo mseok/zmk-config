@@ -9,8 +9,8 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 
-/* Mouse move MAX speed (가속 곡선의 끝점). ZMK default 600 → 10배. 곡선은 아래 &mmv. */
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 6000
+/* Mouse move MAX speed (가속 곡선의 끝점). ZMK default 600 → 6배. 곡선은 아래 &mmv. */
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 3600
 /* Mouse scroll speed. ZMK default 10. &msc 는 기본 acceleration-exponent=0 라
    가속 없이 누르는 동안 '일정 속도' 스크롤. 20 → 16 (0.8배). */
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 16
