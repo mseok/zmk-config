@@ -90,8 +90,18 @@ cmd_flash() {
   # 대상 파일명을 짧은 8.3(FW.UF2)으로 고정한다: 최신 macOS 의 fskit FAT 드라이버가
   # 일부 구형 부트로더 볼륨에서 긴 파일명(corne_left.uf2) 생성을 'Permission denied'
   # 로 거부하는 사례가 있어서다. UF2 부트로더는 파일명과 무관하게 .uf2 를 받는다.
-  # 진짜 복사 실패는 set -e 가 잡는다.
-  cp -X "$uf2" "$VOL/FW.UF2"
+  #
+  # 추가로 fskit 은 볼륨이 read-write 인데도 '첫' 쓰기를 가끔 'Permission denied' 로
+  # 거부했다가 곧바로 재시도하면 통과하는 간헐 버그가 있다(일시적/경쟁 상태). 그래서
+  # cp 를 몇 번 재시도한다. set -euo 환경에서는 cp 실패가 스크립트를 즉시 끝내므로,
+  # if 로 감싸 실패를 면제시키고(루프 계속) 6 회 모두 실패했을 때만 종료한다.
+  local copied=0
+  for attempt in 1 2 3 4 5 6; do
+    if cp -X "$uf2" "$VOL/FW.UF2" 2>/dev/null; then copied=1; break; fi
+    info "  복사가 거부됨(fskit 간헐) — 재시도 ${attempt}/6..."
+    sleep 1
+  done
+  [ "$copied" = 1 ] || { err "복사 실패: $VOL 에 6회 모두 거부됨. 케이블/부트로더 재진입 후 다시 시도하세요."; exit 2; }
   if wait_for_unmount; then
     ok "✅ $half half 플래시 완료 — 보드 재부팅 중."
   else
