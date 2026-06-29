@@ -46,5 +46,12 @@ void draw_animation(lv_obj_t *canvas) {
     lv_img_set_src(art, anim_imgs[anim_imgs_index]);
 #endif
 
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+    // Central: drop the gem into the middle slot the WPM gauge used to occupy,
+    // aligned like that canvas (TOP_RIGHT + BUFFER_OFFSET_MIDDLE) so it lines up
+    // with the top/bottom widgets.
+    lv_obj_align(art, LV_ALIGN_TOP_RIGHT, BUFFER_OFFSET_MIDDLE, 0);
+#else
     lv_obj_align(art, LV_ALIGN_TOP_LEFT, 36, 0);
+#endif
 }
