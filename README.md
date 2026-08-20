@@ -21,7 +21,16 @@ Home row doubles as modifiers when held: `A`/`'`=Ctrl, `S`/`L`=Alt, `D`/`K`=Cmd,
 ### Navigation / media + Bluetooth — hold left `Esc`
 <img src="keymap/nav.svg" alt="Corne NAV layer" width="100%">
 
-Top row: bootloader at both outer corners, and Bluetooth — `BT_SEL 0`–`3` on `W`/`E`/`R`/`T`, `BT_CLR` next to them, and `OUT_TOG` (toggle USB ↔ Bluetooth output) beside that.
+Top row: bootloader at both outer corners, and Bluetooth — `BT_SEL 0`–`4` on `W`/`E`/`R`/`T`/`Y` (the screen shows these one-indexed, as `BT 1`–`BT 5`), and `OUT_TOG` (toggle USB ↔ Bluetooth output) on `U`.
+
+Clearing a bond is deliberately awkward, because a stray `BT_CLR` costs you a re-pair on every host in that slot. Both clears are NAV-layer combos that need two keys at once and no typing in the previous 250 ms:
+
+| Combo (hold `Esc`) | Action |
+| --- | --- |
+| `I` + `O` | `BT_CLR` — drop the bond in the current profile |
+| `I` + `;` | `BT_CLR_ALL` — drop the bonds in all five profiles |
+
+Neither reaches a bond that Zephyr still stores but ZMK no longer tracks. For that, flash the `settings_reset` target in [`build.yaml`](build.yaml) to **both** halves, then reflash the normal firmware and re-pair everything.
 
 ### Mouse — hold either outer thumb
 <img src="keymap/mouse.svg" alt="Corne MOUSE layer" width="100%">
