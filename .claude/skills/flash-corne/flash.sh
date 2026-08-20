@@ -3,20 +3,26 @@
 # flash-corne — fetch the latest CI firmware and flash Corne halves over UF2 (nice!nano v2).
 #
 # Usage:
-#   flash.sh download            # download latest successful build's .uf2 into the cache
-#   flash.sh flash <left|right>  # wait for NICENANO, copy that half's .uf2, verify reboot
-#   flash.sh both                # flash left then right (prompts between halves)
-#   flash.sh status              # show what's cached vs the latest build
+#   flash.sh download                  # download latest successful build's .uf2 into the cache
+#   flash.sh flash <left|right|reset>  # wait for NICENANO, copy that .uf2, verify reboot
+#   flash.sh both                      # flash left then right (prompts between halves)
+#   flash.sh status                    # show what's cached vs the latest build
+#
+# 'reset' flashes the settings_reset firmware, which wipes the settings partition
+# (BLE bonds included) on whichever half it lands on. It has to go onto BOTH halves,
+# and normal firmware must be flashed back afterwards — settings_reset builds with
+# ZMK_BLE=n / ZMK_DISPLAY=n, so a dark screen and dead radio are expected meanwhile.
 #
 # Env:
 #   CORNE_REPO   GitHub repo            (default: mseok/zmk-config)
+#   CORNE_BRANCH branch to pull from    (default: main)
 #   WAIT_SECS    seconds to wait for NICENANO per half (default: 90)
 #
 set -euo pipefail
 
 REPO="${CORNE_REPO:-mseok/zmk-config}"
 WORKFLOW="build.yml"
-BRANCH="main"
+BRANCH="${CORNE_BRANCH:-main}"
 WAIT_SECS="${WAIT_SECS:-90}"
 CACHE="${HOME}/.cache/corne-fw"
 VOL="/Volumes/NICENANO"
@@ -45,14 +51,23 @@ cmd_download() {
   # Artifact .uf2 names carry the full shield list (e.g.
   # "corne_left nice_view_adapter nice_view_gem-nice_nano__zmk-zmk.uf2"),
   # so match a prefix glob — NOT 'corne_left-*' (the char after corne_left is a space).
-  local l r
+  local l r sr
   l="$(find "$tmp" -name 'corne_left*.uf2'  | head -1)"
   r="$(find "$tmp" -name 'corne_right*.uf2' | head -1)"
+  sr="$(find "$tmp" -name 'settings_reset*.uf2' | head -1)"
   # Fail loudly instead of silently keeping a stale cached .uf2.
   [ -n "$l" ] || { err "corne_left*.uf2 아티팩트를 못 찾음 (빌드 산출물 파일명 규칙 변경?). 캐시를 갱신하지 않았습니다."; exit 1; }
   [ -n "$r" ] || { err "corne_right*.uf2 아티팩트를 못 찾음 (빌드 산출물 파일명 규칙 변경?). 캐시를 갱신하지 않았습니다."; exit 1; }
   cp "$l" "$CACHE/corne_left.uf2"
   cp "$r" "$CACHE/corne_right.uf2"
+  # settings_reset is optional: builds from before that target existed won't have it.
+  # Drop any stale copy so 'flash reset' can never quietly use an older run's binary.
+  rm -f "$CACHE/settings_reset.uf2"
+  if [ -n "$sr" ]; then
+    cp "$sr" "$CACHE/settings_reset.uf2"
+  else
+    info "  (settings_reset 아티팩트 없음 — 이 빌드에는 해당 타깃이 없습니다.)"
+  fi
   echo "$rid" > "$CACHE/run_id"
   rm -rf "$tmp"
   ok "펌웨어 준비 완료 → $CACHE"
@@ -80,8 +95,12 @@ wait_for_unmount() {
 
 cmd_flash() {
   local half="${1:-}"
-  case "$half" in left|right) ;; *) err "사용법: flash.sh flash <left|right>"; exit 2 ;; esac
-  local uf2="$CACHE/corne_${half}.uf2"
+  local uf2
+  case "$half" in
+    left|right) uf2="$CACHE/corne_${half}.uf2" ;;
+    reset)      uf2="$CACHE/settings_reset.uf2" ;;
+    *) err "사용법: flash.sh flash <left|right|reset>"; exit 2 ;;
+  esac
   [ -f "$uf2" ] || { err "$uf2 없음 — 먼저 'flash.sh download' 를 실행하세요."; exit 1; }
   wait_for_nicenano || exit 1
   info "$half half 플래시 중..."
@@ -138,8 +157,11 @@ case "${1:-}" in
 사용법:
   flash.sh download            최신 성공 빌드의 .uf2 다운로드(캐시)
   flash.sh flash <left|right>  NICENANO 대기 → 해당 half 복사 → 재부팅 검증
+  flash.sh flash reset         settings_reset 펌웨어 플래시 (설정 파티션 초기화)
   flash.sh both                왼쪽 → 오른쪽 순서로 플래시
   flash.sh status              캐시 / 최신 빌드 상태
+
+환경변수: CORNE_REPO, CORNE_BRANCH(기본 main), WAIT_SECS
 EOF
      exit 2 ;;
 esac
