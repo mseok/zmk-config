@@ -117,6 +117,15 @@ cmd_flash() {
   local copied=0
   for attempt in 1 2 3 4 5 6; do
     if cp -X "$uf2" "$VOL/FW.UF2" 2>/dev/null; then copied=1; break; fi
+    # 부트로더는 UF2 를 다 받는 즉시 재부팅하면서 볼륨을 내려버린다. 그래서 cp 가
+    # '실패' 로 끝났는데 실제로는 쓰기가 다 들어간 경우가 있다. 여기서 볼륨이 이미
+    # 사라졌다면 거부당한 게 아니라 성공한 것이고, 재시도해봐야 없는 경로에 대고
+    # 6 번 실패한 뒤 멀쩡히 구워진 보드를 실패로 보고하게 된다.
+    if [ ! -d "$VOL" ]; then
+      copied=1
+      info "  볼륨이 이미 내려감 — 쓰기가 완료되고 보드가 재부팅한 것으로 판단."
+      break
+    fi
     info "  복사가 거부됨(fskit 간헐) — 재시도 ${attempt}/6..."
     sleep 1
   done
