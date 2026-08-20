@@ -28,10 +28,22 @@ Helper script: `.claude/skills/flash-corne/flash.sh` (run via `bash`).
 4. **Verify (optional)**
    `ioreg -p IOUSB -l | grep '"USB Product Name" = "Corne"'` confirms the half rebooted back into ZMK firmware (so it isn't bricked / still stuck in the bootloader).
 
+## Wiping BLE bonds (`settings_reset`)
+
+Use this only when a profile slot is stuck — it advertises, the host sees it, and pairing fails every time no matter how often `BT_CLR` is pressed. That means Zephyr still holds a bond ZMK no longer tracks, and no in-keymap clear can reach it.
+
+`flash.sh flash reset` writes the `settings_reset` firmware, which erases the settings partition on whichever half it lands on. The full cycle:
+
+1. `flash.sh flash reset` on the **left** half, then again on the **right** half.
+2. `flash.sh flash left` and `flash.sh flash right` to put the normal firmware back.
+3. Re-pair every host. All profiles are empty now, and the halves re-bond to each other on their own.
+
+While `settings_reset` is loaded the screen is dark and the radio is dead — the shield forces `ZMK_BLE=n` and `ZMK_DISPLAY=n`. That is expected, not a failed flash. Never stop after step 1.
+
 ## Notes
 
 - macOS `cp` prints `could not copy extended attributes ... Device not configured` — this is **normal**; only metadata fails, the firmware payload transfers fine. The script treats `NICENANO` **unmounting** as the success signal.
 - Only the USB-connected half can enter the bootloader. To do both halves, flash one, then plug USB into / bootloader the other.
 - Bootloader keys live on the **NAV layer top outer corners** (added to `config/corne.keymap`): left pinky-top = left half, right pinky-top = right half. They only work after the keymap that defines them has itself been flashed once.
-- Repo override: set `CORNE_REPO` if the GitHub repo isn't `mseok/zmk-config`. Wait override: `WAIT_SECS`.
+- Repo override: set `CORNE_REPO` if the GitHub repo isn't `mseok/zmk-config`. Branch override: `CORNE_BRANCH` (default `main`) — needed to flash a build from a feature branch before it is merged. Wait override: `WAIT_SECS`.
 - Direct use (no agent): the user can also just run `bash .claude/skills/flash-corne/flash.sh both` in a terminal and press the bootloader combo when prompted.

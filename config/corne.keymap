@@ -26,10 +26,15 @@
     combos {
         compatible = "zmk,combos";
 
+        /* 둘 다 BASE 전용이다. layers 를 안 걸면 콤보는 모든 레이어에서 살아 있어서,
+           예컨대 NAV 의 Y(=BT_SEL 4) 와 H 를 같이 누르면 프로파일 전환 대신 한영전환이
+           나간다. 원래 vil 용 콤보라 BASE 밖에서 쓸 일이 없다. */
+
         // vil: T + G -> Tab
         combo_tab {
             bindings = <&kp TAB>;
             key-positions = <5 17>;
+            layers = <BASE>;
             timeout-ms = <50>;
         };
 
@@ -37,7 +42,38 @@
         combo_lang {
             bindings = <&kp RC(SPACE)>;
             key-positions = <6 18>;
+            layers = <BASE>;
             timeout-ms = <50>;
+        };
+
+        /* 파괴적인 BT 초기화는 NAV 레이어 전용 콤보로만 발동한다.
+           예전엔 NAV 윗줄 Y 한 방이 BT_CLR 이었다. OUT_TOG(U) 바로 옆이라 한 칸만
+           밀리면 현재 프로파일 bond 가 확인 없이 날아갔고, 실제로 그렇게 페어링이
+           깨졌다. 게다가 ble.c 의 auth_pairing_complete() 는 SMP 가 끝나는 순간
+           상대 주소를 프로파일에 써버리므로, 한 번 어긋난 슬롯은 호스트 쪽에 아무
+           기록이 안 남아도 계속 "taken" 으로 남아 이후 페어링을 전부 거절한다.
+           그래서 이제 세 조건이 모두 맞아야 발동한다:
+             (1) NAV 레이어일 것  (2) 두 키 동시타  (3) 직전 250ms 간 타이핑 없음
+           축은 I(8) 로 공통이되 {8,9} 와 {8,22} 는 서로 부분집합이 아니라서
+           combo.c 의 filter_candidates() 판정이 모호해지지 않는다.
+           8=I, 9=O, 22=; — 셋 다 NAV 에서는 &none 이라 오발이 나도 무해하다. */
+
+        // NAV + I & O -> 현재 프로파일 bond 만 삭제
+        combo_bt_clr {
+            bindings = <&bt BT_CLR>;
+            key-positions = <8 9>;
+            layers = <NAV>;
+            timeout-ms = <60>;
+            require-prior-idle-ms = <250>;
+        };
+
+        // NAV + I & ; -> 5개 프로파일 bond 전부 삭제
+        combo_bt_clr_all {
+            bindings = <&bt BT_CLR_ALL>;
+            key-positions = <8 22>;
+            layers = <NAV>;
+            timeout-ms = <60>;
+            require-prior-idle-ms = <250>;
         };
     };
 
@@ -101,10 +137,13 @@
 
         // NAVIGATION / MEDIA — 좌 Esc 엄지 hold (볼륨조절 레이어)
         // 윗줄 = 부트로더(양쪽 상단 바깥끝/새끼 자리, NAV+해당 모서리) +
-        //        블루투스: 왼손 W/E/R/T = BT_SEL 0~3, 그옆 BT_CLR, OUT_TOG(USB↔BLE 토글)
+        //        블루투스: W/E/R/T/Y = BT_SEL 0~4 (화면 표시 BT 1~BT 5), 그옆
+        //        OUT_TOG(USB↔BLE 토글). BT_CLR/BT_CLR_ALL 은 단타로는 못 누른다 —
+        //        위 combos 블록 참고. 프로파일은 5개인데 예전 키맵은 4개만 닿아서
+        //        마지막 슬롯의 낡은 bond 를 지울 방법이 아예 없었다.
         navigation_layer {
             bindings = <
-&none  &bootloader   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3    &bt BT_CLR  &out OUT_TOG  &none  &none  &bootloader  &none
+&none  &bootloader   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3    &bt BT_SEL 4  &out OUT_TOG  &none  &none  &bootloader  &none
 &none  &none         &kp K_MUTE       &kp C_VOL_DN &kp C_VOL_UP &kp C_BRI_UP           &kp LEFT        &kp DOWN      &kp UP          &kp RIGHT    &none           &none
 &none  &kp LSHFT     &kp C_PREV       &kp C_PP     &kp C_NEXT   &kp C_BRI_DN           &kp HOME        &kp PG_DN     &kp PG_UP       &kp END      &kp RSHFT       &none
                                       &none       &none        &none                  &none           &none         &none

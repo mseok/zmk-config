@@ -162,7 +162,17 @@ def classify(b):
     if beh == "bt":
         sub = p[0] if p else ""
         if sub == "BT_SEL":
-            return {"lines": ["BT", p[1] if len(p) > 1 else ""], "cls": "c-pink", "cat": "bt"}
+            # ZMK indexes profiles from 0, but the nice!view profile widget
+            # prints them from 1 ("BT 1".."BT 5" — nice_view_gem profile.c does
+            # active_profile_index + 1). Label the diagram the way the keyboard's
+            # own screen does: a number read here should be the number you see
+            # while switching, not one off from it.
+            raw = p[1] if len(p) > 1 else ""
+            try:
+                shown = str(int(raw) + 1)
+            except ValueError:
+                shown = raw
+            return {"lines": ["BT", shown], "cls": "c-pink", "cat": "bt"}
         tail = {"BT_CLR": "clear", "BT_CLR_ALL": "clr all",
                 "BT_NXT": "next", "BT_PRV": "prev"}.get(sub, sub.replace("BT_", "").lower())
         return {"lines": ["BT", tail], "cls": "c-pink", "cat": "bt"}

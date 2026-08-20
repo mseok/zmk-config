@@ -22,3 +22,13 @@ include:
     shield: corne_left nice_view_adapter nice_view_gem
   - board: nice_nano//zmk
     shield: corne_right nice_view_adapter nice_view_gem
+  # Settings reset. Wipes the whole settings partition, including BLE bonds that
+  # ZMK's own BT_CLR/BT_CLR_ALL cannot reach: clear_profile_bond() only calls
+  # bt_unpair() for addresses still held in ZMK's profiles[] array, so a Zephyr
+  # bond orphaned by a firmware/settings change survives every in-keymap clear.
+  # Flash this to BOTH halves, then reflash the normal firmware above and re-pair
+  # every host. The shield forces ZMK_BLE=n / ZMK_DISPLAY=n, so a dark screen and
+  # a dead radio are expected while it is loaded.
+  - board: nice_nano//zmk
+    shield: settings_reset
+    artifact-name: settings_reset

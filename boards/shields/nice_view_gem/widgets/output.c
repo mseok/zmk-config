@@ -48,6 +48,20 @@ void draw_output_status(lv_obj_t *canvas, const struct status_state *state) {
 
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     switch (state->selected_endpoint.transport) {
+    case ZMK_TRANSPORT_NONE:
+        // Nothing to type into: USB is not ready and the active BLE profile is not
+        // connected. This case used to be missing, so the switch drew no icon at all
+        // and left the white rectangle blank -- and a blank box looked identical
+        // whether the profile was an empty slot (just pair to it) or held a stale
+        // bond (must BT_CLR it first). Opposite fixes, same picture. Fall back to the
+        // BLE side's real state so the box always says which one you are looking at.
+        if (state->active_profile_bonded) {
+            draw_ble_disconnected(canvas);
+        } else {
+            draw_ble_unbonded(canvas);
+        }
+        break;
+
     case ZMK_TRANSPORT_USB:
         draw_usb_connected(canvas);
         break;
